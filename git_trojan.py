@@ -41,7 +41,9 @@ def connect_to_github():
     return gh,repo,branch
 
 def get_file_contents(filepath):
+    # connect to github
     gh,repo,branch = connect_to_github()
+    # get last commit
     commit = repo.commits().next()
     tree = repo.tree(commit.sha).recurse()
 
