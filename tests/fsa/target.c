@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 
     secret = malloc(2000);
     printf("[+] secret = %p\n", secret);
+    printf("[+] buf = %p\n", buf);
 
     fp = fopen("./resources/fsc_test.txt", "r");
     fread(secret, 1, 2000, fp);
