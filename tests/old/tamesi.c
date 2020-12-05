@@ -14,7 +14,11 @@ int main(int argc, char *argv[])
     int ints[] ={1,4,6,8,2};
     int addrInts0 = ints[0];
     printf("ints pointer:%p\n", ints);
-
+    
+    printf("ints");
+    printf(ints);
+    printf('\n');
+    
     int a = atoi(argv[1]);
     printf("aa%d\n", a);
     printf(argv[1]);
