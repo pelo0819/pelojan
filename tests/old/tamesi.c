@@ -26,7 +26,14 @@ int main(int argc, char *argv[])
     int *a;
     int b = 2;
     a = &b;
-    printf("[*] a:%d, a_ptr:%p" , *a, a);
+    printf("[*] BEFORE a:%d, a_ptr:%p\n" , *a, a);
+
+    char buf[100];
+    strncpy(buf, argv[1], 100);
+    printf(buf);
+    printf("\n");
+
+    printf("[*] AFTER  a:%d, a_ptr:%p\n" , *a, a);
 
     return 0;
 }
