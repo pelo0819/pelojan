@@ -23,11 +23,12 @@ int main(int argc, char *argv[])
     // printf("aa%d\n", a);
     // printf(argv[1]);
 
-    int *a;
-    int b = 2;
-    a = &b;
-    printf("[*] BEFORE a:%p, a_ptr:%p\n" , a, &a);
-    printf("[*] BEFORT b:%d, b_ptr:%p\n" , b, &b);
+    char* str = "AAAA";
+    int str_ptr = str;
+    printf(str_ptr);
+    printf("\n");
+
+    printf("[*] BEFORE str:%s, a_ptr:%p\n" , str_ptr, str_ptr);
 
     printf("case1\n");
     char buf[100];
@@ -39,14 +40,7 @@ int main(int argc, char *argv[])
     printf(argv[1]);
     printf("\n");
 
-    printf("case3\n");
-    char* str = "AAAA:";
-    int a_ptr = str;
-    printf(a_ptr);
-    printf("\n");
-    printf("a_ptr:%p\n", a_ptr);
-
-    printf("[*] AFTER  a:%d, a_ptr:%p\n" , *a, a);
+    printf("[*] AFTER str:%s, a_ptr:%p\n" , str_ptr, str_ptr);
 
     return 0;
 }
