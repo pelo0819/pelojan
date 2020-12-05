@@ -26,12 +26,25 @@ int main(int argc, char *argv[])
     int *a;
     int b = 2;
     a = &b;
-    printf("[*] BEFORE a:%d, a_ptr:%p\n" , *a, a);
+    printf("[*] BEFORE a:%p, a_ptr:%p\n" , a, &a);
+    printf("[*] BEFORT b:%d, b_ptr:%p\n" , b, &b);
 
+    printf("case1\n");
     char buf[100];
     strncpy(buf, argv[1], 100);
     printf(buf);
     printf("\n");
+
+    printf("case2\n");
+    printf(argv[1]);
+    printf("\n");
+
+    printf("case3\n");
+    char* str = "AAAA:";
+    int a_ptr = str;
+    printf(a_ptr);
+    printf("\n");
+    printf("a_ptr:%p\n", a_ptr);
 
     printf("[*] AFTER  a:%d, a_ptr:%p\n" , *a, a);
 
