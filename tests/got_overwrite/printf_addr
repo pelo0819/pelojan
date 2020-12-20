@@ -1,0 +1,67 @@
+[目的]
+target.c内で使用されるprintf関数のアドレスを確認する
+
+[環境]
+Linux kali 5.7.0-kali1-amd64 #1 SMP Debian 5.7.6-1kali2 (2020-07-01) x86_64 GNU/Linux
+
+[コンパイル時]
+1. 「sysctl -w kernel.randomize_va_space=0」してAddress Space Layout Randomization(ASLR)を無効化
+2. 「-z execstack」
+3. 「-m32」で32bitでコンパイル
+
+
+[case1]
+step1. gdbでブレークポイントを張って、printfのアドレスを確認
+下記を実行するとprintfのアドレスは、0xf7314f70である
+--- command and out put ---
+in  gdb -q a.out
+in  gdb-peda$ b *main+100
+in  Breakpoint 2 at 0x125c
+in  r AAAA
+in  p printf
+out $1 = {<text variable, no debug info>} 0xf7e14f70 <printf>
+--- end ---
+
+step2. lddで共有ライブラリのアドレスを確認
+下記を実行すると共有ライブラリの先頭アドレスは0xf7cbc000である
+--- command and out put ---
+in  ldd a.out
+out linux-gate.so.1 (0xf7fd1000)
+    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (xf07dbc000)
+    /lib/ld-linux.so.2 (0xf7fd3000)
+--- end ---
+
+step3. nmで共有ライブラリの先頭アドレスからprintf()のオフセットを確認
+オフセットは0x00053f70である
+--- command and out put ---
+in  nm -D /lib/i386-linux-gnu/libc.so.6 | grep 'printf@@GLIBC_2.0$'
+out 0053f70 T printf@@GLIBC_2.0
+--- end ---
+
+step4. step1.〜step.3のoutより計算してみる
+0xf7e14f70 - 0xf7dbc000 = 364400(10進数)
+オフセットは10進数で343920
+合わない
+
+[case2]
+case1では計算が合わない、case1のstep2を下記に変えてみる
+
+step2'. LD_TRACE_LOADED_OBJECTS=1 ./a.out で共有ライブラリのアドレスを確認
+下記を実行すると共有ライブラリの先頭アドレスは0xf7cbc000である
+--- command and out put ---
+in  LD_TRACE_LOADED_OBJECTS=1 ./a.out
+out linux-gate.so.1 (0xf7fd1000)
+    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xf7dc1000)
+    /lib/ld-linux.so.2 (0xf7fd3000)
+--- end ---
+
+step4' 再計算
+0xf7e14f70 - f7dc1000 = 343920(10進数)
+オフセットは10進数で343920
+マッチした
+
+おしまい
+
+
+
+
